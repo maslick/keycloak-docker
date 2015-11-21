@@ -18,7 +18,7 @@
  $ ./compose.sh
  ```
  This will:
-- Generate a self-signed ssl ssl certificate and deploy it to the keystore (see ``ssl.sh`` and [keycloak docs](http://docs.jboss.org/keycloak/docs/1.2.0.Beta1/userguide/html_single/index.html#d4e278) for more details)
+- Generate a self-signed ssl certificate and deploy it to the keystore (see ``ssl.sh`` and [keycloak docs](http://docs.jboss.org/keycloak/docs/1.2.0.Beta1/userguide/html_single/index.html#d4e278) for more details)
 - Build the docker image
 - Run postgres and keycloak using ``docker-compose``
  
