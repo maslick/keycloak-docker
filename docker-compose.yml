@@ -1,0 +1,17 @@
+db:
+    image: postgres
+    environment:
+        - POSTGRES_DB=keycloak
+        - POSTGRES_USER=keycloak
+        - POSTGRES_PASSWORD=password
+        - POSTGRES_ROOT_PASSWORD=root_password
+
+keycloak:
+    image: keycloak_image:latest
+    links:
+        - db:postgres
+    ports:
+        - "8089:8080"
+        - "9999:9990"
+    volumes:
+        - /data
