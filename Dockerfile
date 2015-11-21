@@ -4,7 +4,7 @@ ENV KEYCLOAK_VERSION 1.3.1.Final
 
 
 USER root
-RUN mkdir /data && touch /data/apim.json && chown jboss:jboss /data/apim.json
+RUN mkdir /data && touch /data/keycloak.json && chown jboss:jboss /data/keycloak.json
 
 USER jboss
 
@@ -38,4 +38,4 @@ RUN sed -i -e 's/<server name="default-server">/&\n                <https-listen
 EXPOSE 8080
 
 # export database into json file on reboot
-CMD ["/opt/jboss/keycloak/bin/standalone.sh", "-b", "0.0.0.0" , "-bmanagement", "0.0.0.0", "-Dkeycloak.migration.action=export", "-Dkeycloak.migration.provider=singleFile", "-Dkeycloak.migration.file=/data/apim.json"]
+CMD ["/opt/jboss/keycloak/bin/standalone.sh", "-b", "0.0.0.0" , "-bmanagement", "0.0.0.0", "-Dkeycloak.migration.action=export", "-Dkeycloak.migration.provider=singleFile", "-Dkeycloak.migration.file=/data/keycloak.json"]

@@ -15,4 +15,4 @@ keycloak:
         - "9999:9990"
         - "443:8443"
     volumes:
-        - /data
+        - ./data:/data
