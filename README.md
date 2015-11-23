@@ -3,6 +3,7 @@
  - Docker image for the Keycloak auth server ``1.6.1 Final``
  - This image comes with a **postgres** database (instead of the native **h2**)
  - HTTPS (SSL) is supported, so **Keycloak** can be easily deployed to the cloud (EC2, Azure, etc.)
+ - Enabled log level via ``KEYCLOAK_LOGLEVEL`` ENV variable
  
 ----
 
