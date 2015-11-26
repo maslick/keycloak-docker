@@ -37,5 +37,7 @@ RUN sed -i -e 's/<server name="default-server">/&\n                <https-listen
 
 EXPOSE 8080
 
+USER root
+
 # export database into json file on reboot
 CMD ["/opt/jboss/keycloak/bin/standalone.sh", "-b", "0.0.0.0" , "-bmanagement", "0.0.0.0", "-Dkeycloak.migration.action=export", "-Dkeycloak.migration.provider=singleFile", "-Dkeycloak.migration.file=/data/keycloak.json"]
