@@ -1,6 +1,6 @@
 FROM jboss/base-jdk:8
 
-ENV KEYCLOAK_VERSION 1.6.1.Final
+ENV KEYCLOAK_VERSION 1.7.0.Final
 
 
 USER root
@@ -9,14 +9,14 @@ RUN mkdir /data && touch /data/keycloak.json && chown jboss:jboss /data/keycloak
 USER jboss
 
 # Download Keycloak and unzip
-RUN cd /opt/jboss/ && curl http://central.maven.org/maven2/org/keycloak/keycloak-server-dist/$KEYCLOAK_VERSION/keycloak-server-dist-$KEYCLOAK_VERSION.tar.gz | tar zx && mv /opt/jboss//keycloak-$KEYCLOAK_VERSION /opt/jboss/keycloak
+RUN cd /opt/jboss/ && curl http://downloads.jboss.org/keycloak/$KEYCLOAK_VERSION/keycloak-$KEYCLOAK_VERSION.tar.gz | tar zx && mv /opt/jboss/keycloak-$KEYCLOAK_VERSION /opt/jboss/keycloak
 
 # switch to standalone-full
 ADD setLogLevel.xsl /opt/jboss/keycloak/
 RUN java -jar /usr/share/java/saxon.jar -s:/opt/jboss/keycloak/standalone/configuration/standalone.xml -xsl:/opt/jboss/keycloak/setLogLevel.xsl -o:/opt/jboss/keycloak/standalone/configuration/standalone.xml
 
 # add admin user
-RUN /opt/jboss/keycloak/bin/add-user.sh admin admin --silent
+RUN /opt/jboss/keycloak/bin/add-user.sh -u admin -p admin
 ENV JBOSS_HOME /opt/jboss/keycloak
 
 # setup postgres database instead of h2
