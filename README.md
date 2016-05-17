@@ -1,8 +1,8 @@
 =keycloak-docker=
 ======
- - Docker image for the Keycloak auth server ``1.7.0.Final``
+ - Docker image for the Keycloak auth server ``1.9.4.Final``
  - This image comes with a **postgres** database (instead of the native **h2**)
- - HTTPS (SSL) is supported, so **Keycloak** can be easily deployed to the cloud (EC2, Azure, etc.)
+ - HTTPS (SSL) is supported, so **Keycloak** can be easily deployed to the cloud (EC2, Azure) or used locally
  - Enabled log level via ``KEYCLOAK_LOGLEVEL`` ENV variable
  
 ----
@@ -27,5 +27,10 @@
 Go to this address in your browser:
 ```
 https://{your_host}/auth
+```
+Default password ``admin:admin`` can be changed in the ``Dockerfile``, line (19):
+```
+# add admin user
+RUN /opt/jboss/keycloak/bin/add-user-keycloak.sh -r master -u admin -p admin
 ```
 
