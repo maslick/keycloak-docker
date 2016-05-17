@@ -7,7 +7,7 @@ db:
         - POSTGRES_ROOT_PASSWORD=root_password
 
 keycloak:
-    image: keycloak_image:1.7.0.Final
+    image: keycloak_image:1.9.4.Final
     environment:
         - KEYCLOAK_LOGLEVEL=DEBUG
     links:

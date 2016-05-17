@@ -1,6 +1,6 @@
 FROM jboss/base-jdk:8
 
-ENV KEYCLOAK_VERSION 1.7.0.Final
+ENV KEYCLOAK_VERSION 1.9.4.Final
 
 
 USER root
@@ -16,7 +16,7 @@ ADD setLogLevel.xsl /opt/jboss/keycloak/
 RUN java -jar /usr/share/java/saxon.jar -s:/opt/jboss/keycloak/standalone/configuration/standalone.xml -xsl:/opt/jboss/keycloak/setLogLevel.xsl -o:/opt/jboss/keycloak/standalone/configuration/standalone.xml
 
 # add admin user
-RUN /opt/jboss/keycloak/bin/add-user.sh -u admin -p admin
+RUN /opt/jboss/keycloak/bin/add-user-keycloak.sh -r master -u admin -p admin
 ENV JBOSS_HOME /opt/jboss/keycloak
 
 # setup postgres database instead of h2
@@ -29,7 +29,7 @@ ADD module.xml /opt/jboss/keycloak/modules/system/layers/base/org/postgresql/jdb
 
 # setup SSL
 USER root
-ADD keycloak.jks $JBOSS_HOME/standalone/configuration/ 
+ADD keycloak.jks $JBOSS_HOME/standalone/configuration/
 RUN chown jboss:jboss $JBOSS_HOME/standalone/configuration/keycloak.jks
 USER jboss
 RUN sed -i -e 's/<security-realms>/&\n            <security-realm name="UndertowRealm">\n                <server-identities>\n                    <ssl>\n                        <keystore path="keycloak.jks" relative-to="jboss.server.config.dir" keystore-password="secret" \/>\n                    <\/ssl>\n                <\/server-identities>\n            <\/security-realm>/' $JBOSS_HOME/standalone/configuration/standalone.xml
