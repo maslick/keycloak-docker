@@ -1,6 +1,6 @@
 FROM jboss/base-jdk:8
 
-ENV KEYCLOAK_VERSION 1.9.7.Final
+ENV KEYCLOAK_VERSION 2.5.1.Final
 
 
 USER root
