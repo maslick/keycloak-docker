@@ -2,7 +2,7 @@ version: '3'
 
 services:
     keycloak:
-        image: my_keycloak_image:4.3.0.Final
+        image: my_keycloak_image:4.4.0.Final
         restart: on-failure
         command:
             - "-b"
