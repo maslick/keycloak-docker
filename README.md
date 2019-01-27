@@ -35,18 +35,18 @@ Default password ``admin:admin`` can be changed in ``docker-compose.yml``: ``KEY
  1. Get certificate from www.sslforfree.com
 ```
 * ca_bundle.crt (root and intermediate certificates)
-* certificate.crt (activeclouder certificate)
+* certificate.crt (public key)
 * private.key (private key)
 ```
 
 2. Create a java keystore (jks) from files acquired in step 1
 ```
-// import root + intermediate certificate to the keystore
-keytool -import -alias ca_bundle -keystore keycloak.jks -trustcacerts -file ca_bundle.crt -storepass secret
+// combine letsencrypt certificate with the issued certificate
+cat certificate.crt ca_bundle.crt > fullchain.pem
 
-// import certificate to the keystore
-openssl pkcs12 -export -in certificate.crt -inkey private.key -name maslick.com -out cert_plus_key.p12 -password pass:secret
-keytool -importkeystore -srckeystore cert_plus_key.p12 -destkeystore keycloak.jks -srcstoretype PKCS12 -srcstorepass secret -deststorepass secret
+// convert to PKCS12 store
+openssl pkcs12 -export -in fullchain.pem -inkey private.key -name activeclouder.ijs.si -out fullchain_plus_key.p12 -password pass:secret
 
-
+// convert to java keystore
+keytool -importkeystore -deststorepass secret -destkeypass secret -destkeystore keycloak.jks -srckeystore fullchain_plus_key.p12 -srcstoretype PKCS12 -srcstorepass secret
 ```
