@@ -1,9 +1,8 @@
 =keycloak-docker=
 ======
- - Docker image for the Keycloak auth server ``1.9.4.Final``
- - This image comes with a **postgres** database (instead of the native **h2**)
- - HTTPS (SSL) is supported, so **Keycloak** can be easily deployed to the cloud (EC2, Azure) or used locally
- - Enabled log level via ``KEYCLOAK_LOGLEVEL`` ENV variable
+ - Docker image for the Keycloak auth server ``4.1.0.Final``
+ - Postgres support (instead of the default **h2**)
+ - HTTPS (SSL) support, so **Keycloak** can be easily deployed to the cloud (EC2, Azure) or used locally
  
 ----
 
@@ -19,7 +18,7 @@
  $ ./compose.sh
  ```
  This will:
-- Generate a self-signed ssl certificate and deploy it to the keystore (see ``ssl.sh`` and [keycloak docs](http://docs.jboss.org/keycloak/docs/1.2.0.Beta1/userguide/html_single/index.html#d4e278) for more details)
+- Generate a self-signed ssl certificate and deploy it to the keystore (see ``ssl.sh`` and [keycloak docs](https://www.keycloak.org/docs/latest/server_installation/index.html#enabling-ssl-https-for-the-keycloak-server) for more details)
 - Build the docker image
 - Run postgres and keycloak using ``docker-compose``
  
@@ -28,9 +27,5 @@ Go to this address in your browser:
 ```
 https://{your_host}/auth
 ```
-Default password ``admin:admin`` can be changed in the ``Dockerfile``, line (19):
-```
-# add admin user
-RUN /opt/jboss/keycloak/bin/add-user-keycloak.sh -r master -u admin -p admin
-```
+Default password ``admin:admin`` can be changed in ``docker-compose.yml``: ``KEYCLOAK_USER``, ``KEYCLOAK_PASSWORD``
 

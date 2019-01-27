@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Run containeres 
-docker-compose up -d db
-sleep 10
+# Run containers
 docker-compose up -d keycloak
+docker-compose logs -f
