@@ -45,7 +45,7 @@ Default password ``admin:admin`` can be changed in ``docker-compose.yml``: ``KEY
 cat certificate.crt ca_bundle.crt > fullchain.pem
 
 // convert to PKCS12 store
-openssl pkcs12 -export -in fullchain.pem -inkey private.key -name activeclouder.ijs.si -out fullchain_plus_key.p12 -password pass:secret
+openssl pkcs12 -export -in fullchain.pem -inkey private.key -name auth.maslick.com -out fullchain_plus_key.p12 -password pass:secret
 
 // convert to java keystore
 keytool -importkeystore -deststorepass secret -destkeypass secret -destkeystore keycloak.jks -srckeystore fullchain_plus_key.p12 -srcstoretype PKCS12 -srcstorepass secret
