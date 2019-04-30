@@ -28,14 +28,26 @@ spec:
         resources:
           requests:
             cpu: 200m
-            memory: 256Mi
-          limits:
-            cpu: 400m
             memory: 512Mi
+          limits:
+            cpu: 1
+            memory: 1024Mi
         env:
           - name: KEYCLOAK_USER
             value: "admin"
           - name: KEYCLOAK_PASSWORD
+            value: "admin"
+          - name: DB_VENDOR
+            value: "postgres"
+          - name: DB_USER
+            value: "keycloak"
+          - name: DB_PASSWORD
             value: "password"
+          - name: DB_ADDR
+            value: "keycloakdb-postgresql"
+          - name: DB_PORT
+            value: "5432"
+          - name: DB_DATABASE
+            value: "keycloakdb"
           - name: PROXY_ADDRESS_FORWARDING
             value: "true"

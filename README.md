@@ -107,12 +107,13 @@ DB_PORT
 2. Create db (optional)
 ```
 k create ns keycloak
-helm install --name keycloak-db \
-    --set postgresUser=admin \
-    --set postgresPassword=password \
-    --set postgresDatabase=keycloak-db \
-    stable/postgresql \
-    --namespace keycloak
+helm install \
+  --name keycloakdb \
+  stable/postgresql \
+  --set "postgresqlUsername=keycloak" \
+  --set "postgresqlPassword=password" \
+  --set "postgresqlDatabase=keycloakdb" \
+  --namespace keycloak
 ```
 
 3. Deploy keycloak
