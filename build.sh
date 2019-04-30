@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker build -t my_keycloak_image:4.8.3.Final .
+docker build -t my_keycloak_image:5.0.0 .

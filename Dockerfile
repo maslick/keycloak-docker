@@ -1,4 +1,4 @@
-FROM jboss/keycloak:4.8.3.Final
+FROM jboss/keycloak:5.0.0
 
 # setup SSL
 USER root

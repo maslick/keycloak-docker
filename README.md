@@ -52,7 +52,7 @@ keytool -importkeystore -deststorepass secret -destkeypass secret -destkeystore 
 ```
 
 
-## Deploy to Openshift cluster
+## Deployment to Openshift cluster
 1. Create new project:
 ```zsh
 $ oc new-project test
@@ -100,3 +100,25 @@ DB_PASSWORD
 DB_ADDR
 DB_PORT
 ```
+
+## Deployment to Kubernetes cluster (GKE)
+1. Follow [instructions](https://github.com/maslick/ingressario) on how to install ``Nginx-ingress`` controller and ``cert-manager`` to your GKE cluster (1-10).
+
+2. Create db (optional)
+```
+k create ns keycloak
+helm install --name keycloak-db \
+    --set postgresUser=admin \
+    --set postgresPassword=password \
+    --set postgresDatabase=keycloak-db \
+    stable/postgresql \
+    --namespace keycloak
+```
+
+3. Deploy keycloak
+```
+k apply -f keycloak-deployment.yml -n keycloak
+k expose deployment keycloak --target-port=8080 --type=NodePort -n keycloak
+k apply -f ingress-keycloak.yaml -n keycloak
+```
+ 
