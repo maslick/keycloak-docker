@@ -1,6 +1,6 @@
 =keycloak-docker=
 ======
- - Docker image for the Keycloak auth server ``4.8.3.Final``
+ - Docker image for the Keycloak auth server ``5.0.0``
  - Postgres support (instead of the default **h2**)
  - HTTPS (SSL) support, so **Keycloak** can be easily deployed to the cloud (EC2, Azure) or used locally
  

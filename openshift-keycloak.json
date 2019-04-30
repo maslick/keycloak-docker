@@ -6,8 +6,8 @@
         "annotations": {
             "iconClass": "icon-sso",
             "tags": "keycloak",
-            "version": "4.8.3.Final",
-            "openshift.io/display-name": "Keycloak 4.8.3.Final",
+            "version": "5.0.0",
+            "openshift.io/display-name": "Keycloak 5.0.0",
             "description": "Keycloak server with HTTPS"
         }
     },
@@ -184,7 +184,7 @@
                         "containers": [
                             {
                                 "name": "${APPLICATION_NAME}",
-                                "image": "jboss/keycloak:4.8.3.Final",
+                                "image": "jboss/keycloak:5.0.0",
                                 "livenessProbe": {
                                     "failureThreshold": 3,
                                     "httpGet": {
