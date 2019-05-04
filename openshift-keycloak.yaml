@@ -1,0 +1,176 @@
+---
+kind: Template
+apiVersion: v1
+metadata:
+  name: keycloak-https
+  annotations:
+    iconClass: icon-sso
+    tags: keycloak
+    version: 6.0.1
+    openshift.io/display-name: Keycloak 6.0.1
+    description: Keycloak server with HTTPS
+parameters:
+  - displayName: Application Name
+    description: The name for the application.
+    name: APPLICATION_NAME
+    value: keycloak
+    required: true
+  - displayName: Keycloak Administrator Username
+    description: Keycloak Server administrator username
+    name: KEYCLOAK_USER
+    from: "[a-zA-Z0-9]{8}"
+    generate: expression
+    required: true
+  - displayName: Keycloak Administrator Password
+    description: Keycloak Server administrator password
+    name: KEYCLOAK_PASSWORD
+    from: "[a-zA-Z0-9]{8}"
+    generate: expression
+    required: true
+  - displayName: Custom http Route Hostname
+    description: 'Custom hostname for http service route. Leave blank for default hostname,
+    e.g.: <application-name>.<project>.<default-domain-suffix>'
+    name: HOSTNAME_HTTP
+    required: false
+  - displayName: Namespace used for DNS discovery
+    description: This namespace is a part of DNS query sent to Kubernetes API. This
+      query allows the DNS_PING protocol to extract cluster members. This parameter
+      might be removed once https://issues.jboss.org/browse/JGRP-2292 is implemented.
+    name: NAMESPACE
+    required: true
+  - displayName: Use HTTPS instead of HTTP
+    description: Use HTTPS instead of HTTP
+    name: KEYCLOAK_HTTPS
+    value: 'true'
+  - displayName: Database name
+    description: Database name
+    name: DB_DATABASE
+    value: keycloakdb
+  - displayName: Db username
+    description: Db username
+    name: DB_USER
+    value: keycloak
+  - displayName: Db password
+    description: Db password
+    name: DB_PASSWORD
+    value: keycloak
+  - displayName: Db vendor
+    description: Db vendor
+    name: DB_VENDOR
+    value: POSTGRES
+  - displayName: Db address
+    description: Db address (will be service name e.g. keycloak-db.auth.svc)
+    name: DB_ADDR
+    value: keycloak-db
+  - displayName: Db port
+    description: Db port
+    name: DB_PORT
+    value: '5432'
+  - displayName: Use reverse proxy
+    description: Set to true if using HTTPS through reverse proxy
+    name: PROXY_ADDRESS_FORWARDING
+    value: 'true'
+objects:
+  - kind: Service
+    apiVersion: v1
+    spec:
+      ports:
+        - protocol: TCP
+          port: 8080
+          targetPort: 8080
+          nodePort: 0
+      selector:
+        deploymentConfig: "${APPLICATION_NAME}"
+      type: ClusterIP
+      sessionAffinity: None
+    metadata:
+      name: "${APPLICATION_NAME}"
+      labels:
+        application: "${APPLICATION_NAME}"
+      annotations:
+        description: The web server's http port.
+  - kind: Route
+    apiVersion: v1
+    id: "${APPLICATION_NAME}-http"
+    metadata:
+      name: "${APPLICATION_NAME}"
+      labels:
+        application: "${APPLICATION_NAME}"
+      annotations:
+        description: Route for application's http service.
+    spec:
+      tls:
+        termination: edge
+        insecureEdgeTerminationPolicy: Allow
+      host: "${HOSTNAME_HTTP}"
+      to:
+        kind: Service
+        name: "${APPLICATION_NAME}"
+  - kind: DeploymentConfig
+    apiVersion: v1
+    metadata:
+      name: "${APPLICATION_NAME}"
+      labels:
+        application: "${APPLICATION_NAME}"
+    spec:
+      strategy:
+        type: Recreate
+      triggers:
+        - type: ConfigChange
+      replicas: 1
+      selector:
+        deploymentConfig: "${APPLICATION_NAME}"
+      template:
+        metadata:
+          name: "${APPLICATION_NAME}"
+          labels:
+            deploymentConfig: "${APPLICATION_NAME}"
+            application: "${APPLICATION_NAME}"
+        spec:
+          containers:
+            - name: "${APPLICATION_NAME}"
+              image: jboss/keycloak:6.0.1
+              livenessProbe:
+                failureThreshold: 3
+                httpGet:
+                  path: "/auth/realms/master"
+                  port: 8080
+                  scheme: HTTP
+                initialDelaySeconds: 60
+              ports:
+                - containerPort: 8080
+                  protocol: TCP
+              readinessProbe:
+                httpGet:
+                  path: "/auth/realms/master"
+                  port: 8080
+                  scheme: HTTP
+                initialDelaySeconds: 30
+                failureThreshold: 10
+              env:
+                - name: KEYCLOAK_HTTPS
+                  value: "${KEYCLOAK_HTTPS}"
+                - name: KEYCLOAK_USER
+                  value: "${KEYCLOAK_USER}"
+                - name: KEYCLOAK_PASSWORD
+                  value: "${KEYCLOAK_PASSWORD}"
+                - name: JGROUPS_DISCOVERY_PROTOCOL
+                  value: dns.DNS_PING
+                - name: JGROUPS_DISCOVERY_PROPERTIES
+                  value: dns_query=${APPLICATION_NAME}.${NAMESPACE}.svc.cluster.local
+                - name: DB_DATABASE
+                  value: "${DB_DATABASE}"
+                - name: DB_USER
+                  value: "${DB_USER}"
+                - name: DB_PASSWORD
+                  value: "${DB_PASSWORD}"
+                - name: DB_VENDOR
+                  value: "${DB_VENDOR}"
+                - name: DB_ADDR
+                  value: "${DB_ADDR}"
+                - name: DB_PORT
+                  value: "${DB_PORT}"
+                - name: PROXY_ADDRESS_FORWARDING
+                  value: "${PROXY_ADDRESS_FORWARDING}"
+              securityContext:
+                privileged: false
