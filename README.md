@@ -103,8 +103,8 @@ helm install \
 
 3. Deploy keycloak
 ```
-k apply -f keycloak-deployment.yml -n keycloak
+k apply -f k8s-keycloak.yaml -n keycloak
 k expose deployment keycloak --target-port=8080 --type=NodePort -n keycloak
-k apply -f ingress-keycloak.yaml -n keycloak
+k apply -f k8s-ingress.yaml -n keycloak
 ```
  
