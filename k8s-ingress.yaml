@@ -1,23 +1,27 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: my-ingress
+  name: keycloak-ingress
   labels:
-    run: web
+    project: web
   annotations:
-    kubernetes.io/tls-acme: “true”
+    kubernetes.io/tls-acme: "true"
     kubernetes.io/ingress.class: "nginx"
-    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    certmanager.k8s.io/cluster-issuer: "letsencrypt-prod"
 spec:
   rules:
-    - host: k8s.maslick.ru
+    - host: auth.maslick.ru
       http:
         paths:
+          - path: /
+            backend:
+              serviceName: keycloak
+              servicePort: 8080
           - path: /auth
             backend:
               serviceName: keycloak
               servicePort: 8080
   tls:
-    - secretName: tls-prod-cert
+    - secretName: tls-keycloak-cert
       hosts:
-        - k8s.maslick.ru
+        - 'auth.maslick.ru'
