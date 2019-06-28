@@ -10,8 +10,13 @@
  - [Docker](https://gist.github.com/maslick/69291bd5ed649892fe1b)
  - [Docker-compose](https://gist.github.com/maslick/5f77efa8ba0f8df98548)
 
+## 2.1. Installation (vanilla Keycloak image)
+SSL is achieved via using the reverse proxy (e.g. Nginx), but you should handle this yourself. This is recommended for production environments.
+```
+docker-compose up -d
+```
 
-## 2. Installation
+## 2.2. Installation (custom image with SSL support)
 ```
 ./ssl.sh          // self-signed certificate
 ./build.sh
