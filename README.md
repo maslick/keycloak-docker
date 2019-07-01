@@ -112,4 +112,30 @@ k apply -f k8s-keycloak.yaml -n keycloak
 k expose deployment keycloak --target-port=8080 --type=NodePort -n keycloak
 k apply -f k8s-ingress.yaml -n keycloak
 ```
- 
+
+## Deployment to k8s via helm charts
+* Install tiller:
+```
+k create serviceaccount tiller --namespace kube-system
+k create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+helm init --service-account tiller
+k get pods --namespace kube-system
+```
+
+* Install helm:
+```
+brew install kubernetes-helm
+```
+
+* Install [keycloak chart](https://github.com/codecentric/helm-charts/tree/master/charts/keycloak):
+```
+helm repo add codecentric https://codecentric.github.io/helm-charts
+helm install --name keycloak codecentric/keycloak \
+  --set keycloak.image.tag=6.0.1 \
+  --set keycloak.replicas=3 \
+  --set keycloak.username=admin \
+  --set keycloak.password=admin \
+  --set keycloak.persistence.deployPostgres=true \
+  --set keycloak.persistence.dbVendor=postgres \
+  --namespace keycloak
+```
